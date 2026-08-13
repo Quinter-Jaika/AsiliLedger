@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+{% block title %}New Batch{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">New Timber Batch</h2>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <form id="batchForm">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Unique Tag ID *</label>
+                <input type="text" class="form-control" id="unique_tag_id" required placeholder="e.g., KEN-2026-001">
+              </div>
+              <div class="col-md-6">
+                <div class="section-title mb-2">
+                  <h6 class="mb-1">Species Data</h6>
+                </div>
+                <div id="species-hidden-inputs"></div>
+
+                <div class="species-select-wrapper" style="position: relative;">
+                  <input
+                    type="text"
+                    id="species-search"
+                    class="form-control"
+                    placeholder="Search species..."
+                    autocomplete="off"
+                  >
+
+                  <div class="species-dropdown border rounded bg-white shadow-sm mt-1 p-1" id="species-dropdown" style="display:none; position:absolute; z-index:1060; width:100%; max-height:220px; overflow-y:auto;">
+                    <div class="species-option d-flex align-items-center gap-2 px-2 py-1 rounded" data-id="1" data-name="Mahogany" data-scientific="Swietenia macrophylla" style="cursor:pointer;">
+                      <span class="species-option-check" style="width:18px;"></span>
+                      <span>Mahogany <span class="text-muted small">- Swietenia macrophylla</span></span>
+                    </div>
+                    <div class="species-option d-flex align-items-center gap-2 px-2 py-1 rounded" data-id="2" data-name="Teak" data-scientific="Tectona grandis" style="cursor:pointer;">
+                      <span class="species-option-check" style="width:18px;"></span>
+                      <span>Teak <span class="text-muted small">- Tectona grandis</span></span>
+                    </div>
+                    <div class="species-option d-flex align-items-center gap-2 px-2 py-1 rounded" data-id="3" data-name="Cypress" data-scientific="Cupressus lusitanica" style="cursor:pointer;">
+                      <span class="species-option-check" style="width:18px;"></span>
+                      <span>Cypress <span class="text-muted small">- Cupressus lusitanica</span></span>
+                    </div>
+                    <div class="species-option d-flex align-items-center gap-2 px-2 py-1 rounded" data-id="4" data-name="Pine" data-scientific="Pinus patula" style="cursor:pointer;">
+                      <span class="species-option-check" style="width:18px;"></span>
+                      <span>Pine <span class="text-muted small">- Pinus patula</span></span>
+                    </div>
+                    <div class="species-option d-flex align-items-center gap-2 px-2 py-1 rounded" data-id="5" data-name="Eucalyptus" data-scientific="Eucalyptus grandis" style="cursor:pointer;">
+                      <span class="species-option-check" style="width:18px;"></span>
+                      <span>Eucalyptus <span class="text-muted small">- Eucalyptus grandis</span></span>
+                    </div>
+                    <div class="species-option d-flex align-items-center gap-2 px-2 py-1 rounded" data-id="6" data-name="Grevillea" data-scientific="Grevillea robusta" style="cursor:pointer;">
+                      <span class="species-option-check" style="width:18px;"></span>
+                      <span>Grevillea <span class="text-muted small">- Grevillea robusta</span></span>
+                    </div>
+                    <div class="species-option d-flex align-items-center gap-2 px-2 py-1 rounded" data-id="7" data-name="Camphor" data-scientific="Cinnamomum camphora" style="cursor:pointer;">
+                      <span class="species-option-check" style="width:18px;"></span>
+                      <span>Camphor <span class="text-muted small">- Cinnamomum camphora</span></span>
+                    </div>
+                    <div class="species-option d-flex align-items-center gap-2 px-2 py-1 rounded" data-id="8" data-name="Cedar" data-scientific="Cedrus deodara" style="cursor:pointer;">
+                      <span class="species-option-check" style="width:18px;"></span>
+                      <span>Cedar <span class="text-muted small">- Cedrus deodara</span></span>
+                    </div>
+                    <div class="species-no-results px-2 py-1 text-muted small" id="species-no-results" style="display:none">No species found</div>
+                  </div>
+                </div>
+
+                <div class="species-tags d-flex flex-wrap gap-2 mt-2" id="species-tags"></div>
+                <div class="species-hint text-muted small mt-1">Click to select one or more species</div>
+                <div class="species-required-error text-danger small mt-1" id="species-required-error" style="display:none;">Please select at least one species.</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Volume (m³) *</label>
+                <input type="number" step="0.01" class="form-control" id="volume_m3" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Weight (kg)</label>
+                <input type="number" step="0.01" class="form-control" id="weight_kg">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Harvest Date</label>
+                <input type="date" class="form-control" id="harvest_date">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Plot ID</label>
+                <input type="number" class="form-control" id="plot_id" placeholder="Forest plot ID">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Organization ID</label>
+                <input type="number" class="form-control" id="current_holder_org_id" placeholder="Current holder org ID">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">From User ID</label>
+                <input type="number" class="form-control" id="from_user_id" placeholder="Optional">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">To User ID</label>
+                <input type="number" class="form-control" id="to_user_id" placeholder="Optional">
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                  <i class="bi bi-check-circle"></i> Create Batch
+                </button>
+                <button type="reset" class="btn btn-secondary">
+                  <i class="bi bi-arrow-counterclockwise"></i> Reset
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title" style="color:#5A3925;">
+            <i class="bi bi-qr-code"></i> QR Code
+          </h5>
+          <div id="qrCodeDisplay" class="py-3">
+            <div class="text-muted">
+              <i class="bi bi-qr-code" style="font-size: 4rem;"></i>
+              <p class="mt-2">QR code will appear here after batch creation</p>
+            </div>
+          </div>
+          <div id="qrActions" style="display: none;">
+            <button class="btn btn-outline-primary btn-sm" id="downloadQR">
+              <i class="bi bi-download"></i> Download
+            </button>
+            <button class="btn btn-outline-success btn-sm" id="printQR">
+              <i class="bi bi-printer"></i> Print
+            </button>
+            <button class="btn btn-outline-info btn-sm" id="shareQR">
+              <i class="bi bi-share"></i> Share
+            </button>
+          </div>
+          <div class="mt-2" id="qrLinkWrap" style="display:none;">
+            <a id="qrFileLink" href="#" target="_blank" rel="noopener" class="small">Open QR image file</a>
+          </div>
+          <div id="batchInfo" style="display: none;" class="mt-3">
+            <hr>
+            <small class="text-muted">Batch Tag: <span id="newBatchId"></span></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  let latestQrCodeData = null;
+  const selectedSpecies = new Map();
+
+  function authHeaders() {
+    const token = localStorage.getItem('token');
+    return token ? { 'Authorization': 'Bearer ' + token } : {};
+  }
+
+  function showAlert(type, message) {
+    const oldAlert = document.getElementById('batchAlert');
+    if (oldAlert) oldAlert.remove();
+
+    const alertDiv = document.createElement('div');
+    alertDiv.id = 'batchAlert';
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-3`;
+    alertDiv.role = 'alert';
+    alertDiv.innerHTML = `${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+    document.getElementById('batchForm').prepend(alertDiv);
+  }
+
+  function renderSpeciesTagsAndInputs() {
+    const tagsEl = document.getElementById('species-tags');
+    const hiddenEl = document.getElementById('species-hidden-inputs');
+    tagsEl.innerHTML = '';
+    hiddenEl.innerHTML = '';
+
+    selectedSpecies.forEach((val, id) => {
+      const tag = document.createElement('span');
+      tag.className = 'badge rounded-pill text-bg-warning';
+      tag.innerHTML = `${val.name} <button type="button" class="btn-close btn-close-sm ms-2" aria-label="Remove"></button>`;
+      tag.querySelector('button').addEventListener('click', () => {
+        selectedSpecies.delete(id);
+        updateSpeciesOptionStates();
+        renderSpeciesTagsAndInputs();
+      });
+      tagsEl.appendChild(tag);
+
+      const hidden = document.createElement('input');
+      hidden.type = 'hidden';
+      hidden.name = 'species_ids[]';
+      hidden.value = id;
+      hiddenEl.appendChild(hidden);
+    });
+
+    document.getElementById('species-required-error').style.display = selectedSpecies.size ? 'none' : 'none';
+  }
+
+  function updateSpeciesOptionStates() {
+    document.querySelectorAll('.species-option').forEach(opt => {
+      const id = opt.dataset.id;
+      const check = opt.querySelector('.species-option-check');
+      if (selectedSpecies.has(id)) {
+        opt.classList.add('bg-light');
+        check.textContent = '✓';
+      } else {
+        opt.classList.remove('bg-light');
+        check.textContent = '';
+      }
+    });
+  }
+
+  function setupSpeciesSelect() {
+    const searchInput = document.getElementById('species-search');
+    const dropdown = document.getElementById('species-dropdown');
+    const noResults = document.getElementById('species-no-results');
+    const options = Array.from(document.querySelectorAll('.species-option'));
+
+    searchInput.addEventListener('focus', () => {
+      dropdown.style.display = 'block';
+    });
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      let visible = 0;
+
+      options.forEach(opt => {
+        const text = `${opt.dataset.name} ${opt.dataset.scientific || ''}`.toLowerCase();
+        const match = text.includes(q);
+        opt.style.display = match ? 'flex' : 'none';
+        if (match) visible += 1;
+      });
+
+      noResults.style.display = visible ? 'none' : 'block';
+      dropdown.style.display = 'block';
+    });
+
+    options.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const id = opt.dataset.id;
+        const name = opt.dataset.name;
+        const scientific = opt.dataset.scientific || '';
+        if (selectedSpecies.has(id)) {
+          selectedSpecies.delete(id);
+        } else {
+          selectedSpecies.set(id, { name, scientific });
+        }
+        updateSpeciesOptionStates();
+        renderSpeciesTagsAndInputs();
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target) && e.target !== searchInput) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    updateSpeciesOptionStates();
+    renderSpeciesTagsAndInputs();
+  }
+
+  function displayQRCode(qrData, uniqueTagId, batchId) {
+    const display = document.getElementById('qrCodeDisplay');
+    display.innerHTML = `
+      <div class="qr-container">
+        <img src="data:image/png;base64,${qrData}" alt="QR Code for ${uniqueTagId}" class="img-fluid"
+             style="max-width: 200px; border: 3px solid #E6B65A; border-radius: 10px; padding: 5px; background: white;">
+        <p class="mt-2"><strong>${uniqueTagId}</strong></p>
+        <small class="text-muted">Scan to verify timber batch</small>
+      </div>
+    `;
+
+    latestQrCodeData = qrData;
+    document.getElementById('newBatchId').textContent = uniqueTagId;
+    document.getElementById('batchInfo').style.display = 'block';
+    document.getElementById('qrActions').style.display = 'block';
+    document.getElementById('qrLinkWrap').style.display = 'block';
+    window.latestBatchId = batchId;
+  }
+
+  document.getElementById('batchForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Creating...';
+
+    const speciesList = Array.from(selectedSpecies.values()).map(s => s.name);
+    if (!speciesList.length) {
+      document.getElementById('species-required-error').style.display = 'block';
+      showAlert('danger', 'Please select at least one species.');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="bi bi-check-circle"></i> Create Batch';
+      return;
+    }
+
+    const formData = {
+      unique_tag_id: document.getElementById('unique_tag_id').value.trim(),
+      species: speciesList.length > 1 ? '__MULTIPLE__' : speciesList[0],
+      species_list: speciesList,
+      volume_m3: parseFloat(document.getElementById('volume_m3').value),
+      weight_kg: document.getElementById('weight_kg').value ? parseFloat(document.getElementById('weight_kg').value) : null,
+      harvest_date: document.getElementById('harvest_date').value || null,
+      plot_id: document.getElementById('plot_id').value ? parseInt(document.getElementById('plot_id').value, 10) : null,
+      current_holder_org_id: document.getElementById('current_holder_org_id').value ? parseInt(document.getElementById('current_holder_org_id').value, 10) : null,
+      from_user_id: document.getElementById('from_user_id').value ? parseInt(document.getElementById('from_user_id').value, 10) : null,
+      to_user_id: document.getElementById('to_user_id').value ? parseInt(document.getElementById('to_user_id').value, 10) : null
+    };
+
+    try {
+      const response = await fetch('/api/batches', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...authHeaders()
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        displayQRCode(result.qr_code, result.unique_tag_id, result.id);
+        if (result.qr_code_url) {
+          document.getElementById('qrFileLink').href = result.qr_code_url;
+        }
+        showAlert('success', 'Batch created successfully and QR code generated.');
+      } else {
+        showAlert('danger', result.error || 'Error creating batch');
+      }
+    } catch (error) {
+      showAlert('danger', 'An error occurred while creating the batch');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="bi bi-check-circle"></i> Create Batch';
+    }
+  });
+
+  document.getElementById('downloadQR').addEventListener('click', function() {
+    if (!latestQrCodeData) return;
+    const link = document.createElement('a');
+    const tag = document.getElementById('newBatchId').textContent || 'batch';
+    link.download = `batch_${tag}_qr.png`;
+    link.href = `data:image/png;base64,${latestQrCodeData}`;
+    link.click();
+  });
+
+  document.getElementById('printQR').addEventListener('click', function() {
+    const qrImage = document.querySelector('#qrCodeDisplay img');
+    if (!qrImage) return;
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head><title>QR Code Print</title></head>
+        <body style="display:flex;justify-content:center;align-items:center;height:100vh;margin:0;">
+          <img src="${qrImage.src}" style="max-width:300px;">
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  });
+
+  document.getElementById('shareQR').addEventListener('click', async function() {
+    const batchTag = document.getElementById('newBatchId').textContent;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Timber Batch QR Code',
+          text: `Verify timber batch: ${batchTag}`,
+          url: window.location.origin + '/template/verify'
+        });
+      } catch (_e) {
+        // User canceled share action.
+      }
+      return;
+    }
+    if (!latestQrCodeData) return;
+    try {
+      await navigator.clipboard.writeText(window.location.origin + '/template/verify');
+      showAlert('info', 'Verification page link copied to clipboard.');
+    } catch (_e) {
+      showAlert('warning', 'Share is not supported in this browser.');
+    }
+  });
+
+  document.getElementById('batchForm').addEventListener('reset', function() {
+    selectedSpecies.clear();
+    updateSpeciesOptionStates();
+    renderSpeciesTagsAndInputs();
+    document.getElementById('species-search').value = '';
+    document.getElementById('species-dropdown').style.display = 'none';
+  });
+
+  setupSpeciesSelect();
+</script>
+{% endblock %}

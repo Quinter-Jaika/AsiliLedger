@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Verify QR{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body text-center">
+          <h3 class="mb-4" style="color:#5A3925;">
+            <i class="bi bi-qr-code-scan"></i> Scan QR Code
+          </h3>
+
+          <div class="mb-4">
+            <div id="reader" style="max-width: 400px; margin: 0 auto;"></div>
+          </div>
+
+          <div id="scanResult" style="display: none;"></div>
+
+          <div class="mt-3">
+            <p class="text-muted">Or enter batch ID manually:</p>
+            <div class="input-group">
+              <input type="text" class="form-control" id="manualBatchId" placeholder="Enter numeric batch ID">
+              <button class="btn btn-primary" id="verifyBtn">
+                <i class="bi bi-search"></i> Verify
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+  function authHeaders() {
+    const token = localStorage.getItem('token');
+    return token ? { 'Authorization': 'Bearer ' + token } : {};
+  }
+
+  async function verifyBatch(batchId) {
+    const resultBox = document.getElementById('scanResult');
+
+    try {
+      const response = await fetch(`/api/batches/${encodeURIComponent(batchId)}/verify`, {
+        headers: {
+          ...authHeaders()
+        }
+      });
+      const result = await response.json();
+
+      if (response.ok) {
+        resultBox.innerHTML = `
+          <div class="alert alert-success text-start">
+            <h5><i class="bi bi-check-circle-fill"></i> Batch Verified</h5>
+            <p><strong>Batch Tag:</strong> ${result.batch.unique_tag_id}</p>
+            <p><strong>Species:</strong> ${result.batch.species}</p>
+            <p><strong>Volume:</strong> ${result.batch.volume_m3} m3</p>
+            <p><strong>Status:</strong> <span class="badge bg-success">${result.batch.current_status}</span></p>
+            <p><strong>Transactions:</strong> ${result.transaction_count}</p>
+          </div>
+        `;
+      } else {
+        resultBox.innerHTML = `<div class="alert alert-danger">${result.error || 'Batch not found or invalid'}</div>`;
+      }
+    } catch (_error) {
+      resultBox.innerHTML = '<div class="alert alert-danger">Error verifying batch.</div>';
+    }
+
+    resultBox.style.display = 'block';
+  }
+
+  function onScanSuccess(decodedText) {
+    try {
+      const data = JSON.parse(decodedText);
+      if (data.batch_id) {
+        verifyBatch(data.batch_id);
+        return;
+      }
+      if (data.verification_url) {
+        const match = data.verification_url.match(/\/batches\/(\d+)\/verify/);
+        if (match && match[1]) {
+          verifyBatch(match[1]);
+          return;
+        }
+      }
+    } catch (_e) {
+      // Not JSON payload, continue fallback.
+    }
+
+    verifyBatch(decodedText);
+  }
+
+  function onScanError(_errorMessage) {
+    // Ignore frequent scanning noise.
+  }
+
+  document.getElementById('verifyBtn').addEventListener('click', function() {
+    const batchId = document.getElementById('manualBatchId').value.trim();
+    if (batchId) verifyBatch(batchId);
+  });
+
+  document.addEventListener('DOMContentLoaded', async function() {
+    if (typeof Html5Qrcode === 'undefined') {
+      document.getElementById('reader').innerHTML = '<div class="alert alert-warning">QR scanner library failed to load. Use manual verify.</div>';
+      return;
+    }
+
+    const html5QrCode = new Html5Qrcode('reader');
+    try {
+      await html5QrCode.start(
+        { facingMode: 'environment' },
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 250 }
+        },
+        onScanSuccess,
+        onScanError
+      );
+    } catch (_err) {
+      document.getElementById('reader').innerHTML = '<div class="alert alert-warning">Camera access denied or unavailable. Use manual verify.</div>';
+    }
+  });
+</script>
+{% endblock %}

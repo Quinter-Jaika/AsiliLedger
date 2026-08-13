@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+	<h2 class="mb-3">Settings</h2>
+	<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+	</div>
+
+	<div class="row g-4">
+		<div class="col-lg-8">
+			<div class="card settings-panel shadow-sm mb-4">
+				<div class="card-header d-flex align-items-center justify-content-between">
+					<h5 class="mb-0" style="color:#5A3925;"><i class="bi bi-person-circle"></i> Profile</h5>
+					<small class="text-muted">Saved locally in browser</small>
+				</div>
+				<div class="card-body">
+					<form id="profileSettingsForm" class="row g-3">
+						<div class="col-md-6">
+							<label class="form-label">Display Name</label>
+							<input id="displayName" type="text" class="form-control" placeholder="System Administrator">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label">Email</label>
+							<input id="displayEmail" type="email" class="form-control" placeholder="admin@kenyatimber.go.ke">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label">Phone</label>
+							<input id="displayPhone" type="text" class="form-control" placeholder="07XXXXXXXX">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label">Language</label>
+							<select id="displayLanguage" class="form-select">
+								<option value="en">English</option>
+								<option value="sw">Swahili</option>
+							</select>
+						</div>
+						<div class="col-12">
+							<button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Save Profile</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="card settings-panel shadow-sm">
+				<div class="card-header">
+					<h5 class="mb-0" style="color:#5A3925;"><i class="bi bi-lock"></i> Security & Session</h5>
+				</div>
+				<div class="card-body">
+					<form id="securitySettingsForm" class="row g-3">
+						<div class="col-md-6">
+							<label class="form-label">New Password</label>
+							<input id="newPassword" type="password" class="form-control" placeholder="Leave blank to keep current">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label">Confirm Password</label>
+							<input id="confirmPassword" type="password" class="form-control" placeholder="Repeat new password">
+						</div>
+						<div class="col-md-6">
+							<div class="form-check mt-2">
+								<input class="form-check-input" type="checkbox" id="autoLogout">
+								<label class="form-check-label" for="autoLogout">Enable auto-logout reminders</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label">Reminder Interval</label>
+							<select id="logoutInterval" class="form-select">
+								<option value="15">15 minutes</option>
+								<option value="30">30 minutes</option>
+								<option value="60">60 minutes</option>
+							</select>
+						</div>
+						<div class="col-12 d-flex flex-wrap gap-2">
+							<button type="submit" class="btn btn-primary"><i class="bi bi-shield-lock"></i> Update Security</button>
+							<button type="button" class="btn btn-outline-danger" id="clearSessionBtn"><i class="bi bi-x-octagon"></i> Clear Session Token</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-4">
+			<div class="card settings-panel shadow-sm mb-4">
+				<div class="card-header">
+					<h5 class="mb-0" style="color:#5A3925;"><i class="bi bi-palette"></i> Preferences</h5>
+				</div>
+				<div class="card-body">
+					<div class="mb-3">
+						<label class="form-label">Dashboard Default View</label>
+						<select id="dashboardView" class="form-select">
+							<option value="summary">Summary</option>
+							<option value="activity">Activity</option>
+							<option value="blockchain">Blockchain Snapshot</option>
+						</select>
+					</div>
+					<div class="form-check mb-2">
+						<input class="form-check-input" type="checkbox" id="emailAlerts">
+						<label class="form-check-label" for="emailAlerts">Email alerts for new transactions</label>
+					</div>
+					<div class="form-check mb-3">
+						<input class="form-check-input" type="checkbox" id="batchCreateAlerts">
+						<label class="form-check-label" for="batchCreateAlerts">Notify me when a batch is created</label>
+					</div>
+					<button id="savePrefsBtn" class="btn btn-primary w-100"><i class="bi bi-check2-circle"></i> Save Preferences</button>
+				</div>
+			</div>
+
+			<div class="card settings-panel shadow-sm">
+				<div class="card-header">
+					<h5 class="mb-0" style="color:#5A3925;"><i class="bi bi-info-circle"></i> Environment</h5>
+				</div>
+				<div class="card-body small">
+					<p class="mb-2"><strong>App:</strong> Kenya Timber Trace</p>
+					<p class="mb-2"><strong>Mode:</strong> Web client + API token auth</p>
+					<p class="mb-0"><strong>Tip:</strong> Use sidebar logout before leaving shared devices.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<div id="settingsToast" class="toast align-items-center text-bg-success border-0 position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true">
+	<div class="d-flex">
+		<div class="toast-body" id="settingsToastMessage">Saved.</div>
+		<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+	</div>
+</div>
+
+<script>
+	const SETTINGS_KEY = 'asili_settings';
+
+	function toast(message, type) {
+		const toastEl = document.getElementById('settingsToast');
+		const toastMsg = document.getElementById('settingsToastMessage');
+		toastEl.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-warning');
+		toastEl.classList.add(type || 'text-bg-success');
+		toastMsg.textContent = message;
+		bootstrap.Toast.getOrCreateInstance(toastEl).show();
+	}
+
+	function loadSettings() {
+		const raw = localStorage.getItem(SETTINGS_KEY);
+		if (!raw) return;
+		const settings = JSON.parse(raw);
+
+		document.getElementById('displayName').value = settings.displayName || '';
+		document.getElementById('displayEmail').value = settings.displayEmail || '';
+		document.getElementById('displayPhone').value = settings.displayPhone || '';
+		document.getElementById('displayLanguage').value = settings.displayLanguage || 'en';
+		document.getElementById('dashboardView').value = settings.dashboardView || 'summary';
+		document.getElementById('emailAlerts').checked = !!settings.emailAlerts;
+		document.getElementById('batchCreateAlerts').checked = !!settings.batchCreateAlerts;
+		document.getElementById('autoLogout').checked = !!settings.autoLogout;
+		document.getElementById('logoutInterval').value = settings.logoutInterval || '30';
+	}
+
+	function collectSettings() {
+		return {
+			displayName: document.getElementById('displayName').value.trim(),
+			displayEmail: document.getElementById('displayEmail').value.trim(),
+			displayPhone: document.getElementById('displayPhone').value.trim(),
+			displayLanguage: document.getElementById('displayLanguage').value,
+			dashboardView: document.getElementById('dashboardView').value,
+			emailAlerts: document.getElementById('emailAlerts').checked,
+			batchCreateAlerts: document.getElementById('batchCreateAlerts').checked,
+			autoLogout: document.getElementById('autoLogout').checked,
+			logoutInterval: document.getElementById('logoutInterval').value
+		};
+	}
+
+	function persistSettings() {
+		localStorage.setItem(SETTINGS_KEY, JSON.stringify(collectSettings()));
+	}
+
+	document.getElementById('profileSettingsForm').addEventListener('submit', function(e) {
+		e.preventDefault();
+		persistSettings();
+		toast('Profile settings saved.', 'text-bg-success');
+	});
+
+	document.getElementById('securitySettingsForm').addEventListener('submit', function(e) {
+		e.preventDefault();
+		const newPass = document.getElementById('newPassword').value;
+		const confirmPass = document.getElementById('confirmPassword').value;
+
+		if (newPass || confirmPass) {
+			if (newPass.length < 8) {
+				toast('Password must be at least 8 characters.', 'text-bg-danger');
+				return;
+			}
+			if (newPass !== confirmPass) {
+				toast('Password confirmation does not match.', 'text-bg-danger');
+				return;
+			}
+		}
+
+		persistSettings();
+		document.getElementById('newPassword').value = '';
+		document.getElementById('confirmPassword').value = '';
+		toast('Security settings updated.', 'text-bg-success');
+	});
+
+	document.getElementById('savePrefsBtn').addEventListener('click', function() {
+		persistSettings();
+		toast('Preferences saved.', 'text-bg-success');
+	});
+
+	document.getElementById('clearSessionBtn').addEventListener('click', function() {
+		localStorage.removeItem('token');
+		toast('Session token cleared. You will need to log in again.', 'text-bg-warning');
+	});
+
+	loadSettings();
+</script>
+{% endblock %}

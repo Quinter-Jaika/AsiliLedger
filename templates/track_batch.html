@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Track Batch{% endblock %}
+{% block content %}
+<h2 class="mb-3">Track Batch</h2>
+<div class="row g-2 align-items-end mb-3">
+  <div class="col-md-4">
+    <label class="form-label">Batch Tag ID</label>
+    <input id="tagInput" class="form-control" placeholder="e.g. KE-2025-0001">
+  </div>
+  <div class="col-md-2">
+    <button id="searchBtn" class="btn btn-primary w-100">Search</button>
+  </div>
+  <div class="col-md-3">
+    <button id="scanBtn" class="btn btn-outline-primary w-100">
+      <i class="bi bi-qr-code-scan me-1"></i> Scan QR
+    </button>
+  </div>
+</div>
+
+<div id="scannerWrap" class="mb-3" hidden>
+  <div id="scanner" style="max-width:420px;"></div>
+  <div id="scanResult" class="small mt-2 text-muted"></div>
+</div>
+
+<div id="result" hidden>
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title" id="batchTag"></h5>
+      <p class="card-text">
+        Species: <span id="batchSpecies"></span> •
+        Volume: <span id="batchVolume"></span>m³ •
+        Status: <span id="batchStatus"></span>
+      </p>
+    </div>
+  </div>
+
+  <h6 class="mb-2">Chain of Custody</h6>
+  <table class="table table-sm">
+    <thead><tr><th>Type</th><th>From</th><th>To</th><th>Time</th><th>Location</th></tr></thead>
+    <tbody id="txBody"></tbody>
+  </table>
+
+  <h6 class="mb-2 mt-3">Blockchain Anchor</h6>
+  <pre id="blockInfo" class="bg-light p-2 rounded small"></pre>
+
+  <div id="actionButtons" class="d-flex flex-wrap gap-2 mt-3" hidden>
+    <button id="loadBtn" class="btn btn-sm btn-primary">Mark as Loaded</button>
+    <button id="unloadBtn" class="btn btn-sm btn-warning">Mark as Unloaded</button>
+    <button id="processBtn" class="btn btn-sm btn-info">Process at Mill</button>
+    <button id="saleBtn" class="btn btn-sm btn-success">Record Sale</button>
+  </div>
+  <div id="txMsg" class="small mt-2"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+{% endblock %}
