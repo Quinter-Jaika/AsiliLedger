@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Blockchain{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+  <div>
+    <h2 class="mb-1">Blockchain</h2>
+    <p class="text-muted mb-0">View a batch's recorded custody history and record verification status.</p>
+  </div>
+</div>
+
+<form id="blockchainBatchLookupForm" class="row g-2 align-items-end mb-4">
+  <div class="col-sm-8 col-lg-5">
+    <label class="form-label" for="blockchainBatchTag">Batch Tag ID</label>
+    <input id="blockchainBatchTag" class="form-control" autocomplete="off" placeholder="e.g. KEN-2026-001" required>
+  </div>
+  <div class="col-sm-auto">
+    <button type="submit" class="btn btn-primary" id="blockchainBatchLookupButton">
+      <i class="bi bi-search"></i> View batch chain
+    </button>
+  </div>
+</form>
+
+<div id="blockchainBatchLookupMessage" class="small mb-3" role="status" aria-live="polite"></div>
+
+<section id="batchChainResult" hidden>
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 border-bottom pb-3 mb-3">
+    <div>
+      <div class="small text-muted">Batch</div>
+      <h3 class="h5 mb-1" id="chainBatchTag"></h3>
+      <div class="small text-muted" id="chainBatchSummary"></div>
+    </div>
+    <div class="text-end">
+      <span class="badge text-bg-light border" id="chainBatchStatus"></span>
+      <div class="small text-muted mt-1" id="chainBatchHolder"></div>
+    </div>
+  </div>
+
+  <p id="chainEventCount" class="small text-muted mb-2"></p>
+  <div class="table-responsive">
+    <table class="table table-sm align-middle">
+      <thead>
+        <tr>
+          <th scope="col">Event</th>
+          <th scope="col">Time</th>
+          <th scope="col">Actor</th>
+          <th scope="col">Custody</th>
+          <!--<th scope="col">Transaction hash</th> -->
+          <th scope="col">Block</th>
+          <th scope="col">Checks</th>
+        </tr>
+      </thead>
+      <tbody id="batchChainEvents"></tbody>
+    </table>
+  </div>
+  <div id="batchChainEmpty" class="text-muted small py-3" hidden>No custody events recorded for this batch.</div>
+</section>
+
+<section class="border-top mt-4 pt-3">
+ <!--
+  <div class="d-flex flex-wrap align-items-center gap-2">
+    <button id="verifyBtn" class="btn btn-sm btn-outline-success">
+      <i class="bi bi-shield-check"></i> Verify full ledger
+    </button>
+    <span id="ledgerVerificationResult" class="small" role="status" aria-live="polite"></span>
+  </div>
+--> 
+</section>
+{% endblock %}

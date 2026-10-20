@@ -1,0 +1,432 @@
+/* Base styles */
+:root {
+  --sidebar-width: 280px;
+  --header-height: 70px;
+  --footer-height: auto;
+  --main-bg: #F7F2EB;
+  --sidebar-bg: #FAF5ED;
+  --accent-gold: #E6B65A;
+  --accent-wood: #8B5E3C;
+  --accent-dark: #5A3925;
+  --text-dark: #3D2B1F;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--main-bg);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========== HEADER ========== */
+.site-header {
+  height: var(--header-height);
+  background: linear-gradient(135deg, #3D2B1F 0%, #5A3925 50%, #6B4429 100%);
+  border-bottom: 2px solid var(--accent-gold);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  flex-shrink: 0;
+  padding: 0 1.5rem;
+}
+
+.navbar-brand-custom {
+  color: #F9C97C;
+  font-family: 'Merriweather', serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.navbar-brand-custom:hover {
+  color: #fff;
+}
+
+.navbar-brand-custom i {
+  font-size: 1.6rem;
+  margin-right: 0.5rem;
+}
+
+.header-african-icon {
+  color: #DCC29A;
+  font-size: 0.85rem;
+  font-weight: 300;
+  letter-spacing: 0.3px;
+  border-left: 1px solid rgba(220, 194, 154, 0.3);
+  padding-left: 0.75rem;
+}
+
+.sidebar-toggler {
+  transition: transform 0.3s ease;
+}
+
+.sidebar-toggler:hover {
+  transform: scale(1.1);
+}
+
+.logout-link {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.logout-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  border-right: 1px solid #E8DDD0;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: var(--header-height);
+  bottom: 0;
+  left: 0;
+  z-index: 1020;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Main content wrapper */
+.site-main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  margin-top: var(--header-height);
+  padding: 2rem;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
+/* When sidebar is collapsed */
+body.sidebar-collapsed .sidebar {
+  transform: translateX(-100%);
+}
+
+body.sidebar-collapsed .site-main {
+  margin-left: 0;
+}
+
+.sidebar .brand {
+  font-family: 'Merriweather', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+  padding: 0.5rem 0 1.5rem 0;
+  border-bottom: 2px solid var(--accent-gold);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar .brand i {
+  color: var(--accent-gold);
+  font-size: 1.6rem;
+}
+
+.sidebar .nav-link {
+  color: var(--text-dark);
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar .nav-link i {
+  font-size: 1.2rem;
+  width: 1.8rem;
+  color: var(--accent-wood);
+}
+
+.sidebar .nav-link:hover {
+  background: rgba(230, 182, 90, 0.2);
+  color: var(--accent-dark);
+  transform: translateX(4px);
+}
+
+.sidebar .nav-link.active {
+  background: linear-gradient(135deg, rgba(230, 182, 90, 0.25), rgba(139, 94, 60, 0.15));
+  color: var(--accent-dark);
+  font-weight: 600;
+  border-left: 3px solid var(--accent-gold);
+}
+
+.sidebar .nav-link.active i {
+  color: var(--accent-gold);
+}
+
+.sidebar-logout-wrap {
+  border-top: 1px dashed rgba(139, 94, 60, 0.35);
+  padding-top: 0.9rem;
+}
+
+.sidebar .nav-link.nav-link-logout {
+  background: rgba(139, 27, 27, 0.08);
+  color: #7B2D26;
+}
+
+.sidebar .nav-link.nav-link-logout i {
+  color: #9F3D34;
+}
+
+.sidebar .nav-link.nav-link-logout:hover {
+  background: rgba(139, 27, 27, 0.16);
+  color: #63201A;
+}
+
+.badge-africa {
+  background: linear-gradient(135deg, #E6B65A, #CE8D54);
+  color: #3D2B1F;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+/* ========== FOOTER ========== */
+.site-footer {
+  background: linear-gradient(135deg, #3D2B1F 0%, #5A3925 50%, #6B4429 100%);
+  color: #DCC29A;
+  padding: 0.65rem 1.25rem 0.45rem;
+  border-top: 2px solid var(--accent-gold);
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.footer-brand {
+  font-family: 'Merriweather', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #F9C97C;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-links a {
+  color: #DCC29A;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.footer-links a:hover {
+  color: #F9C97C;
+}
+
+.site-footer .text-center {
+  margin-top: 0.35rem !important;
+  padding-top: 0.25rem !important;
+  font-size: 0.78rem;
+}
+
+.footer-african-quote {
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #C4A882;
+  padding: 0.3rem 1rem;
+  border-left: 2px solid var(--accent-gold);
+  border-right: 2px solid var(--accent-gold);
+}
+
+.social-icons {
+  display: flex;
+  gap: 1rem;
+  font-size: 1.3rem;
+}
+
+.social-icons i {
+  cursor: pointer;
+  color: #DCC29A;
+  transition: all 0.3s ease;
+}
+
+.social-icons i:hover {
+  color: #F9C97C;
+  transform: translateY(-2px);
+}
+
+/* ========== MOBILE RESPONSIVENESS ========== */
+
+/* Tablet and smaller */
+@media (max-width: 992px) {
+  .sidebar {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    height: calc(100vh - var(--header-height));
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid #E8DDD0;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    /* Must render above the .sidebar-open backdrop (z-index: 1045),
+       otherwise the sidebar slides into place but sits underneath the
+       overlay and looks like it never opened. */
+    z-index: 1050;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-100%);
+    overflow-y: auto;
+  }
+
+  .sidebar.show-mobile {
+    transform: translateX(0);
+  }
+
+  .site-main {
+    margin-left: 0 !important;
+  }
+
+  .site-footer {
+    margin-left: 0 !important;
+  }
+
+  /* Keep the toggle button visible on mobile */
+  .sidebar-toggler {
+    display: block !important;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 260px;
+    padding: 1rem;
+  }
+}
+
+/* ========== UTILITY & ANIMATIONS ========== */
+.bg-warning-opacity {
+  background: rgba(230, 182, 90, 0.15);
+}
+
+/* Scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #F7F2EB;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--accent-gold);
+  border-radius: 10px;
+}
+
+/* Smooth transitions for all layout elements */
+.site-header,
+.sidebar,
+.site-main,
+.site-footer {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animation for cards */
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Footer responsive adjustments */
+@media (max-width: 768px) {
+  .site-footer {
+    padding: 0.6rem 0.85rem 0.45rem;
+  }
+}
+
+/* Prevent body scroll when sidebar is open on mobile */
+body.sidebar-open {
+  overflow: hidden;
+}
+
+/* Mobile backdrop shown behind the open sidebar. Must stay below the
+   sidebar's z-index (1050) or the sidebar will render invisible under it. */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1045;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.sidebar-overlay.show {
+  opacity: 1;
+}
+
+/* Main content area styling */
+.site-main .container-fluid {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.settings-panel {
+  border: 1px solid #EADBC8;
+  border-radius: 16px;
+}
+
+.settings-panel .card-header {
+  background: linear-gradient(135deg, #FFF8EE 0%, #F8EAD8 100%);
+  border-bottom: 1px solid #EADBC8;
+}
+
+.settings-badge {
+  background: #F3E3CE;
+  color: #6F4A2E;
+  border: 1px solid #E2CBA9;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+/* Additional responsive fine-tuning */
+@media (max-width: 992px) {
+  .sidebar .brand {
+    font-size: 1.2rem;
+  }
+}

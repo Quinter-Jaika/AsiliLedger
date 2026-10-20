@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-3">Dashboard</h2>
+<div class="row g-3 mb-3">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle text-muted">Batches</h6>
+        <div class="card-title fs-3" id="countBatches">–</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle text-muted">Transactions (24h)</h6>
+        <div class="card-title fs-3" id="countTx">–</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle text-muted">Latest Block</h6>
+        <div class="card-title fs-6" id="latestBlock">–</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-success mb-3" onclick="location.href='/template/new-batch'">New Batch</button>
+<div id="txMsg" class="mb-2 small"></div>
+<table class="table table-striped">
+  <thead><tr><th>Tag</th><th>Species</th><th>Vol(m³)</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody id="batchesBody"></tbody>
+</table>
+{% endblock %}

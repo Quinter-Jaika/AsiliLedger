@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Scan Result{% endblock %}
+
+{% block content %}
+<div class="card border-0 shadow-sm mx-auto" style="max-width:520px;">
+  <div class="card-body text-center">
+    <h4 class="mb-3" style="color:#5A3925;">
+      <i class="bi bi-qr-code-scan"></i> Scanned Label
+    </h4>
+
+    <div id="scanStatus" class="text-muted py-3" role="status" aria-live="polite">
+      <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2 mb-0">Verifying this label…</p>
+    </div>
+
+    <div id="scanResult" class="text-start" hidden>
+      <p class="mb-1">
+        <strong>Batch Tag:</strong>
+        <span id="scanTag"></span>
+      </p>
+      <p class="mb-3">
+        <strong>Status:</strong>
+        <span id="scanBatchStatus"></span>
+      </p>
+      <a id="scanTrackLink" class="btn btn-primary w-100" href="#">
+        Click to see more
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+  (async function resolveScannedToken() {
+  const config = document.getElementById('scanConfig');
+  const scannedToken = config?.dataset.token;
+  if (!scannedToken) {
+    const status = document.getElementById('scanStatus');
+    if (status) {
+      status.className = 'text-danger py-3';
+      status.textContent = 'The QR code token is missing.';
+    }
+    return;
+  }
+  const status = document.getElementById('scanStatus');
+  const result = document.getElementById('scanResult');
+  const authToken = localStorage.getItem('token');
+
+    if (!status || !result) {
+      console.error('Scan result elements are missing.');
+      return;
+    }
+
+    if (!authToken) {
+      status.innerHTML =
+        '<p class="mb-2">Please sign in to view this batch.</p>' +
+        '<a class="btn btn-primary" href="/?next=' +
+        encodeURIComponent(window.location.pathname) +
+        '">Sign in</a>';
+      return;
+    }
+    
+    if (!scannedToken) {
+    status.className = 'text-danger py-3';
+    status.textContent = 'The QR code token is missing.';
+    return;
+    }
+
+    try {
+      const response = await fetch(
+        '/api/scan/' + encodeURIComponent(scannedToken),
+        {
+          headers: {
+            'Authorization': 'Bearer ' + authToken
+          }
+        }
+      );
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        status.className = 'text-danger py-3';
+        status.textContent =
+          data.error || 'This QR code could not be verified.';
+        return;
+      }
+
+      document.getElementById('scanTag').textContent =
+        data.unique_tag_id || 'Unknown';
+
+      document.getElementById('scanBatchStatus').textContent =
+        data.current_status || 'Unknown';
+
+      document.getElementById('scanTrackLink').href =
+        data.next_page || '#';
+
+      status.hidden = true;
+      result.hidden = false;
+    } catch (error) {
+      console.error('Error verifying scanned label:', error);
+      status.className = 'text-danger py-3';
+      status.textContent =
+        'Unable to verify this label. Please try again.';
+    }
+  })();
+</script>
+{% endblock %}
+
