@@ -1,3 +1,6 @@
 .env
-.pytest_cache
-.venv
+seed/admin.py
+*__pycache__/
+*.pytest_cache/
+.venv/
+venv/
